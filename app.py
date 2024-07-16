@@ -7,7 +7,38 @@ import subprocess
 
 app = Flask(__name__)
 CORS(app)
+@app.route('/')
+def index():
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    </head>
+    <body>
+        <h1>Welcome to GIF and Video Compression Service</h1>
+        <p>Upload your GIF or Video to compress:</p>
+        <form action="/compress_gif" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".gif">
+            <input type="number" name="max_colors" placeholder="Max Colors (optional)">
+            <input type="checkbox" name="optimize" value="true" checked> Optimize GIF
+            <input type="number" name="quality" placeholder="Quality (1-100)">
+            <button type="submit">Compress GIF</button>
+        </form>
+        <br>
+        <form action="/compress_video" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".mp4, .mov">
+            <input type="number" name="scale_factor" step="0.1" min="0.1" max="1.0" placeholder="Scale Factor (0.1-1.0)">
+            <input type="text" name="target_bitrate" placeholder="Target Bitrate (e.g., 500k)">
+            <button type="submit">Compress Video</button>
+        </form>
+    </body>
+    </html>
+    """
 
+    
 @app.route('/compress_gif', methods=['POST'])
 def compress_gif():
     file = request.files['file']
